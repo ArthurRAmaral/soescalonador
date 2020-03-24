@@ -1,4 +1,3 @@
-import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +7,6 @@ public class RoundRobin implements Method {
 	private LocalTime actual;
 	private LocalTime quantum;
 	private List<LocalTime> returnTime;
-	DecimalFormat df =  new DecimalFormat("0.00");
 	
 	public RoundRobin(LocalTime quantum) {
 		this.quantum = quantum;
@@ -32,7 +30,7 @@ public class RoundRobin implements Method {
 					c.setEstimatedTime(c.getEstimatedTime().minusHours(quantum.getHour()).minusMinutes(quantum.getMinute()));
 					times++;
 					if(c.getEstimatedTime().compareTo(quantum) < 0) {
-						System.out.println("\nFinalizing the client" + c.minimize() + " \nat: " + actual);
+						//System.out.println("\nFinalizing the client" + c.minimize() + " \nat: " + actual);
 						clientsFinalized++;
 						lastActual = actual;
 						
@@ -83,9 +81,9 @@ public class RoundRobin implements Method {
 			total = total.plusHours(t.getHour()).plusMinutes(t.getMinute());
 		}
 		
-		double valor = ((total.getHour() * 60) + total.getMinute()) / (double) returnTime.size();
+		double value = ((total.getHour() * 60) + total.getMinute()) / (double) returnTime.size();
 						
-		return Double.parseDouble(df.format(valor).replace(",", "."));
+		return value;
 	}
 
 }
