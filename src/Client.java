@@ -51,4 +51,9 @@ public class Client {
 		return "\nCode: " + this.getCode() + " CPF: " + this.getCpf() + " | " + this.getPriority() +
 				" | \nArrive: " + this.getArrivalTime() + "\tEstimated: " + this.getEstimatedTime();
 	}
+	
+	public String minimize() {
+		return "\nCode: " + this.getCode() + "\tArrived: " + this.getArrivalTime();
+	}
+	
 }
