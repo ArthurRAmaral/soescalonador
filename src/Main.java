@@ -14,11 +14,12 @@ public class Main {
 
         List<Client> database = FileConverter.getClientData(databaseFile);
 
-        PriorityQueue priorityQueue = new PriorityQueue();
+        SimplePriority simplePriority = new SimplePriority();
 
-        int finalized = priorityQueue.start(database, START, END);
-        System.out.println(priorityQueue.getReturnTime());
-        System.out.println(priorityQueue.getResponseTime());
+        simplePriority.start(database, START, END);
+        
+        System.out.println(simplePriority.getReturnTime());
+        System.out.println(simplePriority.getResponseTime());
 
 //        for (int i = 0; i < 500; i++) {
 //            System.out.println(PasswordGenerator.genereteNextPassword(Service.PAGAR_BOLETO));
