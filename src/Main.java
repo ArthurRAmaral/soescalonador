@@ -16,11 +16,15 @@ public class Main {
 
     	List<Client> database = FileConverter.getClientData(databaseFile);
     	
-    	int finalized = RoundRobin.start(database, QUANTUM, START, END);
+    	RoundRobin roundrobin = new RoundRobin(QUANTUM);
     	
-    	System.out.println("\nWith round robin you can answer " + finalized + " clients from " + database.size() + " in one day and end at " + RoundRobin.getActual());
-//        for (int i = 0; i < 500; i++) {
-//            System.out.println(PasswordGenerator.genereteNextPassword(Service.PAGAR_BOLETO));
-//        }
+    	int finalized = roundrobin.start(database, START, END);
+    	
+    	System.out.println("\nWith round robin you can answer " + finalized + " clients from " + database.size() + " in one day and end at " + roundrobin.getActual());
+    	
+    	double returnTime = roundrobin.getReturnTime();
+    	
+    	System.out.println("\nTempo médio de retorno é " + returnTime);
+
     }
 }
