@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
-public class PriorityQueue implements Method {
+public class SimplePriority implements Method {
     private List<Integer> responseTimes;
     private List<Integer> returnTimes;
 

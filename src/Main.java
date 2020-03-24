@@ -26,5 +26,14 @@ public class Main {
     	
     	System.out.println("\nTempo m�dio de retorno � " + returnTime);
 
+        PriorityQueue priorityQueue = new PriorityQueue();
+
+        int finalized = priorityQueue.start(database, START, END);
+        System.out.println(priorityQueue.getReturnTime());
+        System.out.println(priorityQueue.getResponseTime());
+
+//        for (int i = 0; i < 500; i++) {
+//            System.out.println(PasswordGenerator.genereteNextPassword(Service.PAGAR_BOLETO));
+//        }
     }
 }
