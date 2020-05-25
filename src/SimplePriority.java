@@ -46,18 +46,18 @@ public class SimplePriority implements Method {
                 responseTimes.add(
                         (
                                 (
-                                        (finalizeAt.getMinute() - startedAt.getMinute()) + wait.getMinute()
+                                        wait.getMinute()
                                 ) + (
-                                		(finalizeAt.getHour() - startedAt.getHour()) + wait.getHour()
+                                		wait.getHour()
                                 ) * 60
                         )
                 );
                 returnTimes.add(
                         (
-                                (
-                                        finalizeAt.getMinute() - dayStart.getMinute()
+                        		(
+                                        (finalizeAt.getMinute() - startedAt.getMinute()) + wait.getMinute()
                                 ) + (
-                                        finalizeAt.getHour() - dayStart.getHour()
+                                		(finalizeAt.getHour() - startedAt.getHour()) + wait.getHour()
                                 ) * 60
                         )
                 );
