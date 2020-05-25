@@ -9,11 +9,14 @@ public class SimplePriority implements Method {
     private List<Integer> responseTimes;
     private List<Integer> returnTimes;
 
+    public SimplePriority() {
+        responseTimes = new ArrayList<>();
+        returnTimes = new ArrayList<>();
+    }
+    
     @Override
     public int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd) {
         int clientsFinalized = 0;
-        responseTimes = new ArrayList<>();
-        returnTimes = new ArrayList<>();
         LocalTime actual = dayStart;
 
         List<Client> priorityList = list.stream().sorted(Comparator.comparing(Client::getPriority).reversed()).collect(Collectors.toList());
