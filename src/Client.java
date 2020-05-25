@@ -6,6 +6,7 @@ public class Client {
 	private int priority;
 	private LocalTime estimatedTime;
 	private LocalTime arrivalTime;
+	private LocalTime endTime;
 
 	public Client(String code, String cpf, int priority, LocalTime estimatedTime, LocalTime arrivalTime) {
 		this.code = code;
@@ -13,6 +14,16 @@ public class Client {
 		this.priority = priority;
 		this.estimatedTime = estimatedTime;
 		this.arrivalTime = arrivalTime;
+		this.endTime = arrivalTime.plusHours(estimatedTime.getHour())
+                .plusMinutes(estimatedTime.getMinute());;
+	}
+
+	public LocalTime getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(LocalTime endTime) {
+		this.endTime = endTime;
 	}
 
 	public String getCode() {
@@ -49,7 +60,8 @@ public class Client {
 	@Override
 	public String toString() {
 		return "\nCode: " + this.getCode() + " CPF: " + this.getCpf() + " | " + this.getPriority() +
-				" | \nArrive: " + this.getArrivalTime() + "\tEstimated: " + this.getEstimatedTime();
+				" | \nArrive: " + this.getArrivalTime() + "\tEstimated: " + this.getEstimatedTime() + 
+				"\tEnd at: " + this.getEndTime();
 	}
 	
 	public String minimize() {
