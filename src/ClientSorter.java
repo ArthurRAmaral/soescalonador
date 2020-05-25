@@ -1,4 +1,3 @@
-import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -27,14 +26,14 @@ public class ClientSorter {
 		Collections.sort(list, new Comparator<Client>() {
 			@Override
 			public int compare(Client c1, Client c2) {
-				LocalTime estimated = c1.getEstimatedTime();
 				if(c2.getPriority() == c1.getPriority()) {
 					return c1.getArrivalTime().compareTo(c2.getArrivalTime());
-				} else if (c1.getArrivalTime().plusHours(estimated.getHour()).plusMinutes(estimated.getMinute()).compareTo(c2.getArrivalTime()) > 0){
-					return c1.getArrivalTime().compareTo(c2.getArrivalTime());
-				} else {
-					return c2.getPriority() - c1.getPriority();
-				}
+				} else if(c2.getArrivalTime().equals(c1.getArrivalTime())) {
+						return c2.getPriority() - c1.getPriority();
+					} else {
+						return c1.getArrivalTime().compareTo(c2.getArrivalTime());
+					}
+				
 			}
 		});
 	}
