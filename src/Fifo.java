@@ -1,27 +1,25 @@
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.stream.Collectors;
 
-public class SimplePriority implements Method {
-    private List<Integer> responseTimes;
+public class Fifo implements Method {
+	
+	private List<Integer> responseTimes;
     private List<Integer> returnTimes;
-
-    public SimplePriority() {
-        responseTimes = new ArrayList<>();
+    
+    public Fifo() {
+    	responseTimes = new ArrayList<>();
         returnTimes = new ArrayList<>();
     }
-    
-    @Override
-    public int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd) {
-        int clientsFinalized = 0;
+
+	@Override
+	public int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd) {
+		ClientSorter.sortByArrive(list);
         LocalTime actual = dayStart;
-
-        List<Client> priorityList = list.stream().sorted(Comparator.comparing(Client::getPriority).reversed()).collect(Collectors.toList());
-
-        for (Client client : priorityList) {
+        int clientsFinalized = 0;
+		
+        for (Client client : list) {
             LocalTime startedAt = actual;
             LocalTime finalizeAt = startedAt.plusHours(client.getEstimatedTime().getHour()).plusMinutes(client.getEstimatedTime().getMinute());
 
@@ -50,21 +48,22 @@ public class SimplePriority implements Method {
                 );
             }
         }
+		
+		return clientsFinalized;
+	}
 
-        return clientsFinalized;
-    }
-
-    @Override
-    public double getResponseTime() {
-        OptionalDouble average = responseTimes.stream().mapToInt(Integer::valueOf).average();
+	@Override
+	public double getResponseTime() {
+		OptionalDouble average = responseTimes.stream().mapToInt(Integer::valueOf).average();
         if (average.isPresent()) return average.getAsDouble();
-        return 0;
-    }
+		return 0;
+	}
 
-    @Override
-    public double getReturnTime() {
-        OptionalDouble average = returnTimes.stream().mapToInt(Integer::valueOf).average();
+	@Override
+	public double getReturnTime() {
+		OptionalDouble average = returnTimes.stream().mapToInt(Integer::valueOf).average();
         if (average.isPresent()) return average.getAsDouble();
-        return 0;
-    }
+		return 0;
+	}
+
 }

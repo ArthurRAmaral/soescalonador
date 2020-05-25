@@ -17,7 +17,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
     	Scanner input = new Scanner(System.in);
-    	
         File databaseFile = new File(DATABASE_FILE);
     	
     	int choose = 0;
@@ -28,9 +27,15 @@ public class Main {
         	
         	switch(choose) {
         	case 1:
-        		simplePriorityMethod(databaseFile);
+        		fifoMethod(databaseFile);
         		break;
         	case 2:
+        		sjfMethod(databaseFile);
+        		break;
+        	case 3:
+        		simplePriorityMethod(databaseFile);
+        		break;
+        	case 4:
         		roundRobinMethod(databaseFile);
             	break;
         	}
@@ -40,7 +45,38 @@ public class Main {
     }
     
     public static void menu() {
-    	System.out.println("\nChoose the method: \n1 - Priority\n2 - Round Robin\n\n0 - END");
+    	System.out.println("\nChoose the method: \n1 - FIFO\n2 - SJF\n"
+    			+ "3 - Priority\n4 - Round Robin\n0 - END");
+    }
+    
+    public static void fifoMethod(File databaseFile) throws IOException {
+    	Fifo fifo = new Fifo();
+    	int finalized;
+    	
+    	List<Client> database = FileConverter.getClientData(databaseFile);
+
+    	finalized = fifo.start(database, START, END);
+    	
+		System.out.println("\n\n============================================================\n"
+				+ "With FIFO you can answer " + finalized + 
+				" clients from " + database.size() + "\nResponse Time: " +  df.format(fifo.getResponseTime()) +
+				"\nReturn Time: " + df.format(fifo.getReturnTime()) +
+				"\n============================================================\n");
+    }
+    
+    public static void sjfMethod(File databaseFile) throws IOException {
+    	Sjf sjf = new Sjf();
+    	int finalized;
+    	
+    	List<Client> database = FileConverter.getClientData(databaseFile);
+
+    	finalized = sjf.start(database, START, END);
+
+    	System.out.println("\n\n============================================================\n"
+    			+ "With SJF you can answer " + finalized + 
+    			" clients from " + database.size() + "\nResponse Time: " + df.format(sjf.getResponseTime())  +
+				"\nReturn Time: " + df.format(sjf.getReturnTime())+
+				"\n============================================================\n" );
     }
     
     public static void simplePriorityMethod(File databaseFile) throws IOException {
