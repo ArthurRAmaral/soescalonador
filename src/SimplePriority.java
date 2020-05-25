@@ -1,9 +1,7 @@
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.stream.Collectors;
 
 public class SimplePriority implements Method {
     private List<Integer> responseTimes;
@@ -18,15 +16,17 @@ public class SimplePriority implements Method {
     public int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd) {
         int clientsFinalized = 0;
         LocalTime actual = dayStart;
+        
+        ClientSorter.sortByArrive(list);
 
-        List<Client> priorityList = list.stream().sorted(Comparator.comparing(Client::getPriority).reversed()).collect(Collectors.toList());
-
-        for (Client client : priorityList) {
-            LocalTime startedAt = actual;
+        ClientSorter.sortByPriorityFifo(list);
+                
+        for (Client client : list) {
+            LocalTime startedAt = client.getArrivalTime();
             LocalTime finalizeAt = startedAt.plusHours(client.getEstimatedTime().getHour()).plusMinutes(client.getEstimatedTime().getMinute());
 
             if (finalizeAt.isBefore(dayEnd)) {
-               //System.out.println("Started at: " + startedAt + "\t|\t" + "Password: " + client.getCode() + "\t|\tFinalized at: " + finalizeAt);
+               System.out.println("Started at: " + startedAt + "\t|\t" + "Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt);
                 actual = finalizeAt;
                 clientsFinalized++;
                //System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() - dayStart.getMinute()) + (startedAt.getHour() - dayStart.getHour())*60  ));
@@ -56,6 +56,7 @@ public class SimplePriority implements Method {
 
     @Override
     public double getResponseTime() {
+    	System.out.println(responseTimes);
         OptionalDouble average = responseTimes.stream().mapToInt(Integer::valueOf).average();
         if (average.isPresent()) return average.getAsDouble();
         return 0;
