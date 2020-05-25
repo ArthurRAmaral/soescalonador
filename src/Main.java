@@ -17,7 +17,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
     	Scanner input = new Scanner(System.in);
-    	
         File databaseFile = new File(DATABASE_FILE);
     	
     	int choose = 0;
@@ -33,6 +32,9 @@ public class Main {
         	case 2:
         		roundRobinMethod(databaseFile);
             	break;
+        	case 3:
+        		fifoMethod(databaseFile);
+        		break;
         	}
     	} while(choose != 0);
     	
@@ -40,7 +42,23 @@ public class Main {
     }
     
     public static void menu() {
-    	System.out.println("\nChoose the method: \n1 - Priority\n2 - Round Robin\n\n0 - END");
+    	System.out.println("\nChoose the method: \n1 - Priority\n2 - Round Robin\n"
+    			+ "3 - FIFO\n\n0 - END");
+    }
+    
+    public static void fifoMethod(File databaseFile) throws IOException {
+    	Fifo fifo = new Fifo();
+    	int finalized;
+    	
+    	List<Client> database = FileConverter.getClientData(databaseFile);
+
+    	finalized = fifo.start(database, START, END);
+    	
+		System.out.println("\n\n============================================================\n"
+				+ "With simple priority you can answer " + finalized + 
+				" clients from " + database.size() + "\nResponse Time: " +  df.format(fifo.getResponseTime()) +
+				"\nReturn Time: " + df.format(fifo.getReturnTime()) +
+				"\n============================================================\n");
     }
     
     public static void simplePriorityMethod(File databaseFile) throws IOException {
