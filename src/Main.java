@@ -46,7 +46,7 @@ public class Main {
     
     public static void menu() {
     	System.out.println("\nChoose the method: \n1 - FIFO\n2 - SJF\n"
-    			+ "3- Priority\n4 - Round Robin\n0 - END");
+    			+ "3 - Priority\n4 - Round Robin\n0 - END");
     }
     
     public static void fifoMethod(File databaseFile) throws IOException {

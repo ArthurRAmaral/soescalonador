@@ -6,6 +6,8 @@ public class Sjf implements Method{
 	@Override
 	public int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd) {
 		System.out.println(list);
+		ClientSorter.sortByEstimated(list);
+		System.out.println(list);
 		return 0;
 	}
 
