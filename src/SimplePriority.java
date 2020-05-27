@@ -21,8 +21,8 @@ public class SimplePriority implements Method {
         
         ClientSorter.sortByArrive(list);
 
-        ClientSorter.sortByPriorityFifo(list);
-        //System.out.println(list + "\n\n\n");
+        ClientSorter.sortByPriorityFifo(list, dayStart);
+        System.out.println(list + "\n\n\n");
         
         
         for (Client client : list) {
@@ -39,7 +39,7 @@ public class SimplePriority implements Method {
             LocalTime finalizeAt = startedAt.plusHours(client.getEstimatedTime().getHour()).plusMinutes(client.getEstimatedTime().getMinute());
 
             if (finalizeAt.isBefore(dayEnd)) {
-              //System.out.println("Started at: " + startedAt + "\t|\t" + "Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt + "\t|\tEstimate: " + client.getEstimatedTime());
+              System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime() + "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt + "\t|\tEstimate: " + client.getEstimatedTime());
                 actual = finalizeAt;
                 clientsFinalized++;
                //System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() - dayStart.getMinute()) + (startedAt.getHour() - dayStart.getHour())*60  ));
