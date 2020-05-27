@@ -32,7 +32,7 @@ public class SimplePriority implements Method {
         	if(client.getArrivalTime().compareTo(actual) >= 0) {
         		actual = client.getArrivalTime();
         	} else {
-        		wait = LocalTime.of((int) HOURS.between(client.getArrivalTime(), actual), (int) MINUTES.between(client.getArrivalTime(), actual));
+        		wait = actual.minusHours(client.getArrivalTime().getHour()).minusMinutes(client.getArrivalTime().getMinute());
         	}
         	        	
             LocalTime startedAt = actual;
