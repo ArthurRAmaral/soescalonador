@@ -27,19 +27,19 @@ public class Main {
         	
         	switch(choose) {
         	case 1:
-        		fifoMethod(databaseFile);
+        		startMethod(databaseFile, new Fifo());
         		break;
         	case 2:
-        		sjfMethod(databaseFile);
+        		startMethod(databaseFile, new Sjf());
         		break;
         	case 3:
-        		simplePriorityFifoMethod(databaseFile);
+        		startMethod(databaseFile, new SimplePriorityFifo());
         		break;
         	case 4:
-        		simplePrioritySjfMethod(databaseFile);
+        		startMethod(databaseFile, new SimplePrioritySjf());
         		break;
         	case 5:
-        		roundRobinMethod(databaseFile);
+        		startMethod(databaseFile, new RoundRobin(QUANTUM));
             	break;
         	}
     	} while(choose != 0);
@@ -52,78 +52,16 @@ public class Main {
     			+ "3 - Priority FIFO\n4 - Priority SJF\n5 - Round Robin\n0 - END");
     }
     
-    public static void fifoMethod(File databaseFile) throws IOException {
-    	Fifo fifo = new Fifo();
-    	int finalized;
+    public static void startMethod(File databaseFile, Method method) throws IOException {
     	
     	List<Client> database = FileConverter.getClientData(databaseFile);
-
-    	finalized = fifo.start(database, START, END);
+    	int finalized = method.start(database, START, END);
     	
-		System.out.println("\n\n============================================================\n"
-				+ "With FIFO you can answer " + finalized + 
-				" clients from " + database.size() + "\nResponse Time: " +  df.format(fifo.getResponseTime()) +
-				"\nReturn Time: " + df.format(fifo.getReturnTime()) +
-				"\n============================================================\n");
-    }
-    
-    public static void sjfMethod(File databaseFile) throws IOException {
-    	Sjf sjf = new Sjf();
-    	int finalized;
-    	
-    	List<Client> database = FileConverter.getClientData(databaseFile);
-
-    	finalized = sjf.start(database, START, END);
-
     	System.out.println("\n\n============================================================\n"
-    			+ "With SJF you can answer " + finalized + 
-    			" clients from " + database.size() + "\nResponse Time: " + df.format(sjf.getResponseTime())  +
-				"\nReturn Time: " + df.format(sjf.getReturnTime())+
-				"\n============================================================\n" );
-    }
-    
-    public static void simplePriorityFifoMethod(File databaseFile) throws IOException {
-    	SimplePriorityFifo simplePriority = new SimplePriorityFifo();
-    	int finalized;
-    	
-    	List<Client> database = FileConverter.getClientData(databaseFile);
-
-    	finalized = simplePriority.start(database, START, END);
-    	
-		System.out.println("\n\n============================================================\n"
-				+ "With simple priority you can answer " + finalized + 
-				" clients from " + database.size() + "\nResponse Time: " +  df.format(simplePriority.getResponseTime()) +
-				"\nReturn Time: " + df.format(simplePriority.getReturnTime()) +
+				+ "With " + method.getName() +  " you can answer " + finalized + 
+				" clients from " + database.size() + "\nResponse Time: " +  df.format(method.getResponseTime()) +
+				"\nReturn Time: " + df.format(method.getReturnTime()) +
 				"\n============================================================\n");
-    }
-    
-    public static void simplePrioritySjfMethod(File databaseFile) throws IOException {
-    	SimplePrioritySjf simplePriority = new SimplePrioritySjf();
-    	int finalized;
-    	
-    	List<Client> database = FileConverter.getClientData(databaseFile);
-
-    	finalized = simplePriority.start(database, START, END);
-    	
-		System.out.println("\n\n============================================================\n"
-				+ "With simple priority you can answer " + finalized + 
-				" clients from " + database.size() + "\nResponse Time: " +  df.format(simplePriority.getResponseTime()) +
-				"\nReturn Time: " + df.format(simplePriority.getReturnTime()) +
-				"\n============================================================\n");
-    }
-    
-    public static void roundRobinMethod(File databaseFile) throws IOException {
-    	RoundRobin roundrobin = new RoundRobin(QUANTUM);
-    	int finalized;
-    	
-    	List<Client> database = FileConverter.getClientData(databaseFile);
-
-    	finalized = roundrobin.start(database, START, END);
-
-    	System.out.println("\n\n============================================================\n"
-    			+ "With round robin you can answer " + finalized + 
-    			" clients from " + database.size() + "\nResponse Time: " + df.format(roundrobin.getResponseTime())  +
-				"\nReturn Time: " + df.format(roundrobin.getReturnTime())+
-				"\n============================================================\n" );
     }
 }
+

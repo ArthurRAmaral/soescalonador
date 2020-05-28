@@ -8,6 +8,7 @@ public class Sjf implements Method{
 	
 	private List<Integer> responseTimes;
     private List<Integer> returnTimes;
+    private String name = "SJF";
     
     public Sjf() {
     	responseTimes = new ArrayList<>();
@@ -40,7 +41,7 @@ public class Sjf implements Method{
             LocalTime finalizeAt = startedAt.plusHours(client.getEstimatedTime().getHour()).plusMinutes(client.getEstimatedTime().getMinute());
 
             if (finalizeAt.isBefore(dayEnd)) {
-              System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime() + "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt + "\t|\tEstimate: " + client.getEstimatedTime());
+              //System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime() + "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt + "\t|\tEstimate: " + client.getEstimatedTime());
                 actual = finalizeAt;
                 clientsFinalized++;
                //System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() - dayStart.getMinute()) + (startedAt.getHour() - dayStart.getHour())*60  ));
@@ -103,5 +104,10 @@ public class Sjf implements Method{
         if (average.isPresent()) return average.getAsDouble();
 		return 0;
 	}
+	
+	@Override
+	public String getName() {
+    	return this.name;
+    }
 
 }

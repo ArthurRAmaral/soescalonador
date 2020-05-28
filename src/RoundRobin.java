@@ -7,6 +7,7 @@ public class RoundRobin implements Method {
 	private LocalTime actual;
 	private LocalTime quantum;
 	private List<LocalTime> returnTime;
+	private String name =  "Round Robin";
 	
 	public RoundRobin(LocalTime quantum) {
 		this.quantum = quantum;
@@ -85,5 +86,10 @@ public class RoundRobin implements Method {
 						
 		return value;
 	}
+	
+	@Override
+	public String getName() {
+    	return this.name;
+    }
 
 }
