@@ -56,10 +56,11 @@ public class Main {
     	
     	List<Client> database = FileConverter.getClientData(databaseFile);
     	int finalized = method.start(database, START, END);
+    	int size = database.size();
     	
     	System.out.println("\n\n============================================================\n"
 				+ "With " + method.getName() +  " you can answer " + finalized + 
-				" clients from " + database.size() + "\nResponse Time: " +  df.format(method.getResponseTime()) +
+				" clients from " + size + "\nResponse Time: " +  df.format(method.getResponseTime()) +
 				"\nReturn Time: " + df.format(method.getReturnTime()) +
 				"\n============================================================\n");
     }
