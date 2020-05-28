@@ -13,13 +13,4 @@ public class ClientSorter {
 		});
 	}
 
-	public static void sortByEstimated(List<Client> list) {
-		Collections.sort(list, new Comparator<Client>() {
-			@Override
-			public int compare(Client c1, Client c2) {
-				return c1.getEstimatedTime().compareTo(c2.getEstimatedTime());
-			}
-		});
-	}
-
 }

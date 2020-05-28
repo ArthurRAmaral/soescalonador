@@ -111,3 +111,5 @@ modules.xml
 
 # Sonarlint plugin
 .idea/sonarlint
+/bin/
+/bin1/

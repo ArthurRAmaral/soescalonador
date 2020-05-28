@@ -1,3 +1,6 @@
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,37 +22,46 @@ public class Fifo implements Method {
         LocalTime actual = dayStart;
         int clientsFinalized = 0;
 		
-        for (Client client : list) {
+ for (Client client : list) {
+        	
+        	LocalTime wait = LocalTime.of(0,0);
+        	
+        	if(client.getArrivalTime().compareTo(actual) >= 0) {
+        		actual = client.getArrivalTime();
+        	} else {
+        		wait = LocalTime.of((int) HOURS.between(client.getArrivalTime(), actual), (int) MINUTES.between(client.getArrivalTime(), actual));
+        	}
+        	        	
             LocalTime startedAt = actual;
             LocalTime finalizeAt = startedAt.plusHours(client.getEstimatedTime().getHour()).plusMinutes(client.getEstimatedTime().getMinute());
 
             if (finalizeAt.isBefore(dayEnd)) {
-               //System.out.println("Started at: " + startedAt + "\t|\t" + "Password: " + client.getCode() + "\t|\tFinalized at: " + finalizeAt);
+              // System.out.println("Started at: " + startedAt + "\t|\t" + "Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt);
                 actual = finalizeAt;
                 clientsFinalized++;
                //System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() - dayStart.getMinute()) + (startedAt.getHour() - dayStart.getHour())*60  ));
                 responseTimes.add(
                         (
                                 (
-                                        startedAt.getMinute() - dayStart.getMinute()
+                                        wait.getMinute()
                                 ) + (
-                                        startedAt.getHour() - dayStart.getHour()
+                                		wait.getHour()
                                 ) * 60
                         )
                 );
                 returnTimes.add(
                         (
-                                (
-                                        finalizeAt.getMinute() - dayStart.getMinute()
+                        		(
+                                        (finalizeAt.getMinute() - startedAt.getMinute()) + wait.getMinute()
                                 ) + (
-                                        finalizeAt.getHour() - dayStart.getHour()
+                                		(finalizeAt.getHour() - startedAt.getHour()) + wait.getHour()
                                 ) * 60
                         )
                 );
             }
-        }
-		
-		return clientsFinalized;
+                    }
+
+        return clientsFinalized;
 	}
 
 	@Override
