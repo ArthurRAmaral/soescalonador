@@ -10,6 +10,7 @@ public class Fifo implements Method {
 	
 	private List<Integer> responseTimes;
     private List<Integer> returnTimes;
+    private String name = "FIFO";
     
     public Fifo() {
     	responseTimes = new ArrayList<>();
@@ -77,5 +78,10 @@ public class Fifo implements Method {
         if (average.isPresent()) return average.getAsDouble();
 		return 0;
 	}
+	
+	@Override
+	public String getName() {
+    	return this.name;
+    }
 
 }

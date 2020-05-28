@@ -8,5 +8,7 @@ public interface Method {
 
     double getReturnTime();
 
-
+    default String getName() {
+    	return "Unknown";
+    }
 }

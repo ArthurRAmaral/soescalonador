@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class SimplePrioritySjf implements Method {
 	private List<Integer> responseTimes;
 	private List<Integer> returnTimes;
+	private String name = "Simple Priority SJF";
 
 	public SimplePrioritySjf() {
 		responseTimes = new ArrayList<>();
@@ -42,9 +43,9 @@ public class SimplePrioritySjf implements Method {
 					.plusMinutes(client.getEstimatedTime().getMinute());
 
 			if (finalizeAt.isBefore(dayEnd)) {
-				System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime()
-						+ "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt
-						+ "\t|\tEstimate: " + client.getEstimatedTime());
+//				System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime()
+//						+ "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt
+//						+ "\t|\tEstimate: " + client.getEstimatedTime());
 				actual = finalizeAt;
 				clientsFinalized++;
 				// System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() -
@@ -99,4 +100,9 @@ public class SimplePrioritySjf implements Method {
 			return average.getAsDouble();
 		return 0;
 	}
+	
+	@Override
+	public String getName() {
+    	return this.name;
+    }
 }
