@@ -59,7 +59,6 @@ public class SimplePrioritySjf implements Method {
 	}
 
 	private Client getNextCLientOf(List<Client> list, LocalTime actual) {
-		System.out.println("entrou");
 		Client returnClient = list.get(0);
 		final Client compareClient = returnClient;
 		List<Client> aux;
