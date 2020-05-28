@@ -23,7 +23,6 @@ public class Sjf implements Method{
         
         ClientSorter.sortByArrive(list);
 
-        ClientSorter.sortByEstimated(list, dayStart);
         System.out.println(list + "\n\n\n");
         
         for (Client client : list) {
@@ -33,7 +32,7 @@ public class Sjf implements Method{
         	if(client.getArrivalTime().compareTo(actual) >= 0) {
         		actual = client.getArrivalTime();
         	} else {
-        		wait = LocalTime.of((int) HOURS.between(client.getArrivalTime(), actual), (int) MINUTES.between(client.getArrivalTime(), actual));
+        		wait = actual.minusHours(client.getArrivalTime().getHour()).minusMinutes(client.getArrivalTime().getMinute());
         	}
         	        	
             LocalTime startedAt = actual;

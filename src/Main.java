@@ -33,9 +33,12 @@ public class Main {
         		sjfMethod(databaseFile);
         		break;
         	case 3:
-        		simplePriorityMethod(databaseFile);
+        		simplePriorityFifoMethod(databaseFile);
         		break;
         	case 4:
+        		simplePrioritySjfMethod(databaseFile);
+        		break;
+        	case 5:
         		roundRobinMethod(databaseFile);
             	break;
         	}
@@ -46,7 +49,7 @@ public class Main {
     
     public static void menu() {
     	System.out.println("\nChoose the method: \n1 - FIFO\n2 - SJF\n"
-    			+ "3 - Priority\n4 - Round Robin\n0 - END");
+    			+ "3 - Priority FIFO\n4 - Priority SJF\n5 - Round Robin\n0 - END");
     }
     
     public static void fifoMethod(File databaseFile) throws IOException {
@@ -79,8 +82,23 @@ public class Main {
 				"\n============================================================\n" );
     }
     
-    public static void simplePriorityMethod(File databaseFile) throws IOException {
-    	SimplePriority simplePriority = new SimplePriority();
+    public static void simplePriorityFifoMethod(File databaseFile) throws IOException {
+    	SimplePriorityFifo simplePriority = new SimplePriorityFifo();
+    	int finalized;
+    	
+    	List<Client> database = FileConverter.getClientData(databaseFile);
+
+    	finalized = simplePriority.start(database, START, END);
+    	
+		System.out.println("\n\n============================================================\n"
+				+ "With simple priority you can answer " + finalized + 
+				" clients from " + database.size() + "\nResponse Time: " +  df.format(simplePriority.getResponseTime()) +
+				"\nReturn Time: " + df.format(simplePriority.getReturnTime()) +
+				"\n============================================================\n");
+    }
+    
+    public static void simplePrioritySjfMethod(File databaseFile) throws IOException {
+    	SimplePrioritySjf simplePriority = new SimplePrioritySjf();
     	int finalized;
     	
     	List<Client> database = FileConverter.getClientData(databaseFile);

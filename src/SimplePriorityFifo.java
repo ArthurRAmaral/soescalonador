@@ -3,13 +3,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 
-;
 
-public class SimplePriority implements Method {
+public class SimplePriorityFifo implements Method {
     private List<Integer> responseTimes;
     private List<Integer> returnTimes;
 
-    public SimplePriority() {
+    public SimplePriorityFifo() {
         responseTimes = new ArrayList<>();
         returnTimes = new ArrayList<>();
     }
@@ -22,14 +21,12 @@ public class SimplePriority implements Method {
 
         ClientSorter.sortByArrive(list);
 
-//        ClientSorter.sortByPriorityFifo(list, dayStart);
 //        System.out.println(list + "\n\n\n");
-
 
         for (int i = 0; i < initSize; i++) {
 
             Client client = getNextCLientOf(list, actual);
-            System.out.println("\nclient = " + client);
+            //System.out.println("\nclient = " + client);
 
             LocalTime wait = LocalTime.of(0, 0);
 
