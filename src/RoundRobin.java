@@ -1,3 +1,4 @@
+import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,11 @@ public class RoundRobin implements Method {
 		}
 		actual = lastActual;
 		return clientsFinalized;
+	}
+
+	@Override
+	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients) {
+		return 0;
 	}
 
 	public LocalTime getQuantum() {

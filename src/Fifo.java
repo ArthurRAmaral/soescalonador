@@ -1,10 +1,13 @@
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.concurrent.Semaphore;
 
 public class Fifo implements Method {
 	
@@ -65,7 +68,23 @@ public class Fifo implements Method {
         return clientsFinalized;
 	}
 
-	@Override
+    @Override
+    public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int size) {
+        List<Client> list = new ArrayList<Client>(size);
+        Semaphore listLock = new Semaphore(1);
+        Semaphore countItems = new Semaphore(0);
+        Producer producer = new Producer(list, listLock, countItems, size);
+
+        try{
+            producer.run(database);
+            producer.join();
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
 	public double getResponseTime() {
 		OptionalDouble average = responseTimes.stream().mapToInt(Integer::valueOf).average();
         if (average.isPresent()) return average.getAsDouble();

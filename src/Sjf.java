@@ -1,3 +1,4 @@
+import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Sjf implements Method{
 		int initSize = list.size();
         LocalTime actual = dayStart;
         
-        ClientSorter.sortByArrive(list);
+       // ClientSorter.sortByArrive(list);
 
         //System.out.println(list + "\n\n\n");
         
@@ -68,7 +69,12 @@ public class Sjf implements Method{
 
         return clientsFinalized;
 	}
-	
+
+	@Override
+	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients) {
+		return 0;
+	}
+
 	private Client getNextCLientOf(List<Client> list, LocalTime actual) {
 		Client returnClient = list.get(0);
 		final Client compareClient = returnClient;
