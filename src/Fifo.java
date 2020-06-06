@@ -15,6 +15,7 @@ public class Fifo implements Method {
     private List<Integer> returnTimes;
     private String name = "FIFO";
     private static final int CLERKS = 2;
+    private static LocalTime actual;
 
     public Fifo() {
         responseTimes = new ArrayList<>();
@@ -24,7 +25,7 @@ public class Fifo implements Method {
     @Override
     public int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd) {
         ClientSorter.sortByArrive(list);
-        LocalTime actual = dayStart;
+        actual = dayStart;
         int clientsFinalized = 0;
 
         for (Client client : list) {
@@ -41,7 +42,7 @@ public class Fifo implements Method {
             LocalTime finalizeAt = startedAt.plusHours(client.getEstimatedTime().getHour()).plusMinutes(client.getEstimatedTime().getMinute());
 
             if (finalizeAt.isBefore(dayEnd)) {
-                // System.out.println("Started at: " + startedAt + "\t|\t" + "Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt);
+                //System.out.println("Started at: " + startedAt + "\t|\t" + "Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt);
                 actual = finalizeAt;
                 clientsFinalized++;
                 //System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() - dayStart.getMinute()) + (startedAt.getHour() - dayStart.getHour())*60  ));
@@ -71,12 +72,13 @@ public class Fifo implements Method {
 
     @Override
     public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int size) {
+        actual = dayStart;
         List<Client> list = new ArrayList<>(size);
         Semaphore listLock = new Semaphore(1);
         Semaphore countItems = new Semaphore(0);
         Producer producer = new Producer(database, list, listLock, countItems, size);
-        ConsumerFifo clerk1 = new ConsumerFifo(list, listLock, countItems, (size+1)/CLERKS, "Hellen");
-        ConsumerFifo clerk2 = new ConsumerFifo(list, listLock, countItems, size/CLERKS, "Isa");
+        ConsumerFifo clerk1 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, (size+1)/CLERKS, "Hellen");
+        ConsumerFifo clerk2 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, size/CLERKS, "Isa");
 
         try {
             producer.start();
@@ -89,8 +91,13 @@ public class Fifo implements Method {
             e.printStackTrace();
         }
 
-        System.out.println("Sobrou -> " + list.size());
-        return 0;
+        this.responseTimes = clerk1.getResponseTimes();
+        this.responseTimes.addAll(clerk2.getResponseTimes());
+
+        this.returnTimes = clerk1.getReturnTimes();
+        this.returnTimes.addAll(clerk2.getReturnTimes());
+
+        return size - list.size();
     }
 
     @Override
