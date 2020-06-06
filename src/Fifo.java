@@ -1,8 +1,4 @@
-import static java.time.temporal.ChronoUnit.HOURS;
-import static java.time.temporal.ChronoUnit.MINUTES;
-
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +31,7 @@ public class Fifo implements Method {
             if (client.getArrivalTime().compareTo(actual) >= 0) {
                 actual = client.getArrivalTime();
             } else {
-                wait = LocalTime.of((int) HOURS.between(client.getArrivalTime(), actual), (int) MINUTES.between(client.getArrivalTime(), actual));
+                wait = actual.minusHours(client.getArrivalTime().getHour()).minusMinutes(client.getArrivalTime().getMinute());
             }
 
             LocalTime startedAt = actual;
@@ -71,14 +67,14 @@ public class Fifo implements Method {
     }
 
     @Override
-    public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int size) {
+    public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients) {
         actual = dayStart;
-        List<Client> list = new ArrayList<>(size);
+        List<Client> list = new ArrayList<>(qntClients);
         Semaphore listLock = new Semaphore(1);
         Semaphore countItems = new Semaphore(0);
-        Producer producer = new Producer(database, list, listLock, countItems, size);
-        ConsumerFifo clerk1 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, (size+1)/CLERKS, "Hellen");
-        ConsumerFifo clerk2 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, size/CLERKS, "Isa");
+        Producer producer = new Producer(database, list, listLock, countItems, qntClients);
+        ConsumerFifo clerk1 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
+        ConsumerFifo clerk2 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, qntClients/CLERKS, "Isa");
 
         try {
             producer.start();
@@ -97,7 +93,7 @@ public class Fifo implements Method {
         this.returnTimes = clerk1.getReturnTimes();
         this.returnTimes.addAll(clerk2.getReturnTimes());
 
-        return size - list.size();
+        return qntClients - list.size();
     }
 
     @Override

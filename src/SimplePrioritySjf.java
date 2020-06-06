@@ -3,12 +3,15 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 public class SimplePrioritySjf implements Method {
 	private List<Integer> responseTimes;
 	private List<Integer> returnTimes;
 	private String name = "Simple Priority SJF";
+	private static LocalTime actual;
+	private static final int CLERKS = 2;
 
 	public SimplePrioritySjf() {
 		responseTimes = new ArrayList<>();
@@ -19,7 +22,7 @@ public class SimplePrioritySjf implements Method {
 	public int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd) {
 		int clientsFinalized = 0;
 		int initSize = list.size();
-		LocalTime actual = dayStart;
+		actual = dayStart;
 
 		//ClientSorter.sortByArrive(list);
 
@@ -62,7 +65,33 @@ public class SimplePrioritySjf implements Method {
 
 	@Override
 	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients) {
-		return 0;
+		actual = dayStart;
+		List<Client> list = new ArrayList<>(qntClients);
+		Semaphore listLock = new Semaphore(1);
+		Semaphore countItems = new Semaphore(0);
+		Producer producer = new Producer(database, list, listLock, countItems, qntClients);
+		ConsumerPriorityFifo clerk1 = new ConsumerPriorityFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
+		ConsumerPriorityFifo clerk2 = new ConsumerPriorityFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Isa");
+
+		try {
+			producer.start();
+			clerk1.start();
+			clerk2.start();
+			producer.join();
+			clerk1.join();
+			clerk2.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		this.responseTimes = clerk1.getResponseTimes();
+		this.responseTimes.addAll(clerk2.getResponseTimes());
+
+		this.returnTimes = clerk1.getReturnTimes();
+		this.returnTimes.addAll(clerk2.getReturnTimes());
+
+		System.out.println("Sobrou -> " + list.size());
+		return qntClients - list.size();
 	}
 
 	private Client getNextCLientOf(List<Client> list, LocalTime actual) {
