@@ -45,10 +45,9 @@ public class Main {
                 case 6:
                     startThread(databaseFile, new Fifo(), database.size());
                     break;
-
                 case 7:
+                    startThread(databaseFile, new Sjf(), database.size());
                     break;
-
                 case 8:
                     break;
 
@@ -66,7 +65,7 @@ public class Main {
 
     public static void menu() {
         System.out.println("\nChoose the method: \n1 - FIFO\n2 - SJF\n"
-                + "3 - Priority FIFO\n4 - Priority SJF\n5 - Round Robin\n6 - FIFO Thread\n0 - END");
+                + "3 - Priority FIFO\n4 - Priority SJF\n5 - Round Robin\n6 - FIFO Thread\n7 - SJF Thread\n0 - END");
     }
 
     public static void startMethod(File databaseFile, Method method) throws IOException {

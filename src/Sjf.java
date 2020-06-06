@@ -3,6 +3,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 public class Sjf implements Method{
@@ -10,6 +11,7 @@ public class Sjf implements Method{
 	private List<Integer> responseTimes;
     private List<Integer> returnTimes;
     private String name = "SJF";
+	private static final int CLERKS = 2;
     
     public Sjf() {
     	responseTimes = new ArrayList<>();
@@ -72,6 +74,25 @@ public class Sjf implements Method{
 
 	@Override
 	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients) {
+		List<Client> list = new ArrayList<>(qntClients);
+		Semaphore listLock = new Semaphore(1);
+		Semaphore countItems = new Semaphore(0);
+		Producer producer = new Producer(database, list, listLock, countItems, qntClients);
+		ConsumerSjf clerk1 = new ConsumerSjf(list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
+		ConsumerSjf clerk2 = new ConsumerSjf(list, listLock, countItems, qntClients/CLERKS, "Isa");
+
+		try {
+			producer.start();
+			clerk1.start();
+			clerk2.start();
+			producer.join();
+			clerk1.join();
+			clerk2.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Sobrou -> " + list.size());
 		return 0;
 	}
 
