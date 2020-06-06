@@ -45,7 +45,7 @@ public class SimplePriorityFifo implements Method {
             LocalTime finalizeAt = startedAt.plusHours(client.getEstimatedTime().getHour()).plusMinutes(client.getEstimatedTime().getMinute());
 
             if (finalizeAt.isBefore(dayEnd)) {
-                System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime() + "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt + "\t|\tEstimate: " + client.getEstimatedTime());
+                //System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime() + "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt + "\t|\tEstimate: " + client.getEstimatedTime());
                 actual = finalizeAt;
                 clientsFinalized++;
                 //System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() - dayStart.getMinute()) + (startedAt.getHour() - dayStart.getHour())*60  ));
@@ -113,7 +113,6 @@ public class SimplePriorityFifo implements Method {
         this.returnTimes = clerk1.getReturnTimes();
         this.returnTimes.addAll(clerk2.getReturnTimes());
 
-        System.out.println("Sobrou -> " + list.size());
         return qntClients - list.size();
     }
 

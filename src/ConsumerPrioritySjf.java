@@ -2,8 +2,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
-public class ConsumerPriorityFifo extends Thread {
+public class ConsumerPrioritySjf extends Thread {
 
     private List<Client> consumerList;
     private List<Integer> responseTimes;
@@ -15,7 +16,7 @@ public class ConsumerPriorityFifo extends Thread {
     private int numOp;
     private String name;
 
-    public ConsumerPriorityFifo(LocalTime actual, LocalTime dayEnd, List<Client> list, Semaphore sem, Semaphore count, int op, String name) {
+    public ConsumerPrioritySjf(LocalTime actual, LocalTime dayEnd, List<Client> list, Semaphore sem, Semaphore count, int op, String name) {
         this.consumerList = list;
         this.lock = sem;
         this.full = count;
@@ -31,6 +32,7 @@ public class ConsumerPriorityFifo extends Thread {
     public void run() {
         for (int i = 0; i < numOp; i++) {
             try {
+                sleep(10);
                 full.acquire();
                 lock.acquire();
                 Client next = getNextClient();
@@ -52,15 +54,26 @@ public class ConsumerPriorityFifo extends Thread {
 
     private Client getNextClient() {
         Client returnClient = consumerList.get(0);
-        for (Client client : consumerList) {
-//            System.out.println("Ganhando = " + returnClient);
-//            System.out.println("Adversario = " + client);
+        final Client compareClient = returnClient;
+        List<Client> aux;
+
+        if (returnClient.getArrivalTime().compareTo(actual) < 0) {
+            aux = consumerList.stream().filter(c -> c.getArrivalTime().compareTo(actual) <= 0)
+                    .collect(Collectors.toList());
+        } else {
+            aux = consumerList.stream().filter(c -> c.getArrivalTime().compareTo(compareClient.getArrivalTime()) <= 0).collect(Collectors.toList());
+        }
+
+        for (Client client : aux) {
             if (client.getPriority() > returnClient.getPriority()) {
-                if (client.getArrivalTime().compareTo(actual) <= 0 || client.getArrivalTime().compareTo(returnClient.getArrivalTime()) <= 0) {
-                    returnClient = client;
-                }
+                returnClient = client;
+            } else if (client.getPriority() == returnClient.getPriority()
+                    && client.getEstimatedTime().compareTo(returnClient.getEstimatedTime()) < 0) {
+                returnClient = client;
             }
         }
+
+
         LocalTime wait = LocalTime.of(0, 0);
 
         if (returnClient.getArrivalTime().compareTo(actual) >= 0) {

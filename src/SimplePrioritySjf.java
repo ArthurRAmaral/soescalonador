@@ -70,11 +70,10 @@ public class SimplePrioritySjf implements Method {
 		Semaphore listLock = new Semaphore(1);
 		Semaphore countItems = new Semaphore(0);
 		Producer producer = new Producer(database, list, listLock, countItems, qntClients);
-		ConsumerPriorityFifo clerk1 = new ConsumerPriorityFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
-		ConsumerPriorityFifo clerk2 = new ConsumerPriorityFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Isa");
+		ConsumerPrioritySjf clerk1 = new ConsumerPrioritySjf(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
+		ConsumerPrioritySjf clerk2 = new ConsumerPrioritySjf(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Isa");
 
 		try {
-			producer.start();
 			clerk1.start();
 			clerk2.start();
 			producer.join();
@@ -90,7 +89,6 @@ public class SimplePrioritySjf implements Method {
 		this.returnTimes = clerk1.getReturnTimes();
 		this.returnTimes.addAll(clerk2.getReturnTimes());
 
-		System.out.println("Sobrou -> " + list.size());
 		return qntClients - list.size();
 	}
 
@@ -121,7 +119,6 @@ public class SimplePrioritySjf implements Method {
 
 	@Override
 	public double getResponseTime() {
-		// System.out.println(responseTimes);
 		OptionalDouble average = responseTimes.stream().mapToInt(Integer::valueOf).average();
 		if (average.isPresent())
 			return average.getAsDouble();
