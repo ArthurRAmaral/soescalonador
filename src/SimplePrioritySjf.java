@@ -64,7 +64,7 @@ public class SimplePrioritySjf implements Method {
 	}
 
 	@Override
-	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients) {
+	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients, int loop) {
 		actual = dayStart;
 		List<Client> list = new ArrayList<>(qntClients);
 		Semaphore listLock = new Semaphore(1);
@@ -74,6 +74,7 @@ public class SimplePrioritySjf implements Method {
 		ConsumerPrioritySjf clerk2 = new ConsumerPrioritySjf(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Isa");
 
 		try {
+			producer.start();
 			clerk1.start();
 			clerk2.start();
 			producer.join();

@@ -74,7 +74,7 @@ public class Sjf implements Method{
 	}
 
 	@Override
-	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients) {
+	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients, int loop) {
 		actual = dayStart;
 		List<Client> list = new ArrayList<>(qntClients);
 		Semaphore listLock = new Semaphore(1);

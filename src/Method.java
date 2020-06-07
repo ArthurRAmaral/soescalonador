@@ -5,7 +5,7 @@ import java.util.List;
 public interface Method {
     int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd);
 
-    int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients);
+    int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients, int loopTimes);
 
     double getResponseTime();
 

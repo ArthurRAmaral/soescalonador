@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -19,6 +20,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
         File databaseFile = new File(DATABASE_FILE);
         List<Client> database = FileConverter.getClientData(databaseFile);
+        int time = database.stream().mapToInt(e -> e.getEstimatedTime().getHour() * 60 + e.getEstimatedTime().getMinute()).sum();
 
         int choose;
 
@@ -43,19 +45,19 @@ public class Main {
                     startMethod(databaseFile, new RoundRobin(QUANTUM));
                     break;
                 case 6:
-                    startThread(databaseFile, new Fifo(), database.size());
+                    startThread(databaseFile, new Fifo(), database.size(), database.size());
                     break;
                 case 7:
-                    startThread(databaseFile, new Sjf(), database.size());
+                    startThread(databaseFile, new Sjf(), database.size(), database.size());
                     break;
                 case 8:
-                    startThread(databaseFile, new SimplePriorityFifo(), database.size());
+                    startThread(databaseFile, new SimplePriorityFifo(), database.size(), database.size());
                     break;
                 case 9:
-                    startThread(databaseFile, new SimplePrioritySjf(), database.size());
+                    startThread(databaseFile, new SimplePrioritySjf(), database.size(), database.size());
                     break;
                 case 10:
-                    startThread(databaseFile, new RoundRobin(QUANTUM), database.size());
+                    startThread(databaseFile, new RoundRobin(QUANTUM), database.size(), time);
                     break;
 
             }
@@ -84,8 +86,9 @@ public class Main {
                 "\n============================================================\n");
     }
 
-    private static void startThread(File databaseFile, Method method, int size) {
-        int finalized = method.startThread(databaseFile, START, END, size);
+    private static void startThread(File databaseFile, Method method, int size, int op) {
+
+        int finalized = method.startThread(databaseFile, START, END, size, op);
 
         System.out.println("\n\n============================================================\n"
                 + "With " + method.getName() + " Thread you can answer " + finalized +
