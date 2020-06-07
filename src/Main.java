@@ -76,8 +76,8 @@ public class Main {
     private static void startMethod(File databaseFile, Method method) throws IOException {
 
         List<Client> database = FileConverter.getClientData(databaseFile);
-        int finalized = method.start(database, START, END);
         int size = database.size();
+        int finalized = method.start(database, START, END);
 
         System.out.println("\n\n============================================================\n"
                 + "With " + method.getName() + " you can answer " + finalized +
