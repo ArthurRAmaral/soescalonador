@@ -81,7 +81,7 @@ public class Sjf implements Method{
 		Semaphore countItems = new Semaphore(0);
 		Producer producer = new Producer(database, list, listLock, countItems, qntClients);
 		ConsumerSjf clerk1 = new ConsumerSjf(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
-		ConsumerSjf clerk2 = new ConsumerSjf(actual, dayEnd, list, listLock, countItems,  qntClients/CLERKS, "Isa");
+		ConsumerSjf clerk2 = new ConsumerSjf(actual, dayEnd, list, listLock, countItems,  qntClients/CLERKS, "Isabel");
 
 		try {
 			producer.start();

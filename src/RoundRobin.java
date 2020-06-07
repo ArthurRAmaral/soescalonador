@@ -79,7 +79,7 @@ public class RoundRobin implements Method {
 		Semaphore countItems = new Semaphore(0);
 		Producer producer = new Producer(database, list, listLock, countItems, qntClients);
 		ConsumerRoundRobin clerk1 = new ConsumerRoundRobin(this.quantum, actual, dayEnd, list, listLock, countItems, (loopTimes+1)/CLERKS, "Hellen");
-		ConsumerRoundRobin clerk2 = new ConsumerRoundRobin(this.quantum, actual, dayEnd, list, listLock, countItems, (loopTimes+1)/CLERKS, "Isa");
+		ConsumerRoundRobin clerk2 = new ConsumerRoundRobin(this.quantum, actual, dayEnd, list, listLock, countItems, (loopTimes+1)/CLERKS, "Isabel");
 
 		try {
 			producer.start();

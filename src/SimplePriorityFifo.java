@@ -94,7 +94,7 @@ public class SimplePriorityFifo implements Method {
         Semaphore countItems = new Semaphore(0);
         Producer producer = new Producer(database, list, listLock, countItems, qntClients);
         ConsumerPriorityFifo clerk1 = new ConsumerPriorityFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
-        ConsumerPriorityFifo clerk2 = new ConsumerPriorityFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Isa");
+        ConsumerPriorityFifo clerk2 = new ConsumerPriorityFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Isabel");
 
         try {
             producer.start();

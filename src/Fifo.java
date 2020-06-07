@@ -74,7 +74,7 @@ public class Fifo implements Method {
         Semaphore countItems = new Semaphore(0);
         Producer producer = new Producer(database, list, listLock, countItems, qntClients);
         ConsumerFifo clerk1 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
-        ConsumerFifo clerk2 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, qntClients/CLERKS, "Isa");
+        ConsumerFifo clerk2 = new ConsumerFifo(actual, dayEnd, list, listLock, countItems, qntClients/CLERKS, "Isabel");
 
         try {
             producer.start();
