@@ -36,6 +36,7 @@ public class ConsumerPriorityFifo extends Thread {
                 Client next = getNextClient();
                 consumerList.remove(next);
                 lock.release();
+                sleep(next.getEstimatedTime().getMinute() * 30);
             } catch (InterruptedException ie2) {
                 ie2.printStackTrace();
             }
@@ -73,7 +74,7 @@ public class ConsumerPriorityFifo extends Thread {
         LocalTime finalizeAt = startedAt.plusHours(returnClient.getEstimatedTime().getHour()).plusMinutes(returnClient.getEstimatedTime().getMinute());
 
         if (finalizeAt.isBefore(dayEnd)) {
-            //System.out.println(this.name + " --- Started at: " + startedAt + "\t|Should start at: " + returnClient.getArrivalTime() + "\t\t|Prioridade: " + returnClient.getPriority() + "\t|\tFinalized at: " + finalizeAt + "\t|\tEstimate: " + returnClient.getEstimatedTime());
+            System.out.println(this.name + " --- Started at: " + startedAt + "\t|Should start at: " + returnClient.getArrivalTime() + "\t\t|Prioridade: " + returnClient.getPriority() + "\t|\tFinalized at: " + finalizeAt + "\t|\tEstimate: " + returnClient.getEstimatedTime());
             actual = finalizeAt;
             //System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() - dayStart.getMinute()) + (startedAt.getHour() - dayStart.getHour())*60  ));
             responseTimes.add(

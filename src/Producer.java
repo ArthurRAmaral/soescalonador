@@ -9,6 +9,7 @@ public class Producer extends Thread{
     private Semaphore lock;
     private Semaphore full;
     private int numOp;
+    private int lines;
 
     public Producer(File database, List<Client> producerList, Semaphore sem, Semaphore count, int op){
         this.producerList = producerList;
@@ -16,56 +17,67 @@ public class Producer extends Thread{
         this.lock = sem;
         this.full = count;
         this.numOp = op;
+        this.lines = 0;
     }
 
     public void run() {
+
+        for(int i=0; i<numOp; i++){
+            try {
+                lock.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Client tmpClient = null;
+            try {
+                tmpClient = readClient();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            producerList.add(tmpClient);
+            lines++;
+
+            full.release();
+            lock.release();
+        }
+    }
+
+    public Client readClient() throws IOException {
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(database));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         String line = null;
-        try {
-            assert br != null;
+
+        line = br.readLine();
+
+        for(int l = 0; l < lines; l++){
             line = br.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        for(int i=0; i<numOp; i++){
-            String[] values = line.split(";");
 
-            String code = values[0];
-            String cpf = values[1].substring(0, 9) + "-" + values[1].substring(9);
-            int priority = Integer.parseInt(values[2]);
+        String[] values = line.split(";");
 
-            String[] time = values[3].split(":");
-            LocalTime estimatedTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+        String code = values[0];
+        String cpf = values[1].substring(0, 9) + "-" + values[1].substring(9);
+        int priority = Integer.parseInt(values[2]);
 
-            time = values[4].split(":");
-            LocalTime arrivalTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+        String[] time = values[3].split(":");
+        LocalTime estimatedTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]));
 
-            Client tmpClient = new Client(code, cpf, priority, estimatedTime, arrivalTime);
+        time = values[4].split(":");
+        LocalTime arrivalTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]));
 
-            try {
-                line = br.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try{
-                lock.acquire();
-                producerList.add(tmpClient);
-                full.release();
-                lock.release();
-            }catch(InterruptedException ie){
-                ie.printStackTrace();
-            }
-        }
+        Client tmpClient = new Client(code, cpf, priority, estimatedTime, arrivalTime);
+
         try {
             br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
+        return tmpClient;
+    }
 }

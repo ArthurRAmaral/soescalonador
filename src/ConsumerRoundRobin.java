@@ -33,9 +33,8 @@ public class ConsumerRoundRobin extends Thread {
 
     @Override
     public void run() {
-        for (int i = 0; i < numOp; i++) {
+        for (int i = 0; i < numOp - 1; i++) {
             try {
-                sleep(5);
                 full.acquire();
                 lock.acquire();
                 Client next = getNextClient();
@@ -44,6 +43,7 @@ public class ConsumerRoundRobin extends Thread {
                 }
                 lock.release();
                 full.release();
+                sleep(this.quantum.getMinute() * 10);
             } catch (InterruptedException ie2) {
                 ie2.printStackTrace();
             }
@@ -81,16 +81,16 @@ public class ConsumerRoundRobin extends Thread {
         client.setEstimatedTime(client.getEstimatedTime().minusHours(quantum.getHour()).minusMinutes(quantum.getMinute()));
         actual = actual.plusHours(quantum.getHour()).plusMinutes(quantum.getMinute());
 
-        //      System.out.println("Now: " + actual);
+//             System.out.println("Now: " + actual);
 
         if (client.getEstimatedTime().compareTo(end) > 0) {
             consumerList.add(consumerList.size(), client);
         } else {
             this.returnTimes.add(actual.minusHours(client.getArrivalTime().getHour())
                     .minusMinutes(client.getArrivalTime().getMinute()));
-//            System.out.println("\n" + this.name + " ---\nCliente = " + client.getCode() +
-//                    "\tShould start = " + client.getArrivalTime() + "\tFinalized at = " + actual +
-//                    "\tEstimated time = " + client.getEstimatedTime());
+           System.out.println("\n" + this.name + " --- Cliente = " + client.getCode() +
+                    "\t\tShould start = " + client.getArrivalTime() + "\t\tFinalized at = " + actual +
+                    "\t\tEstimated time = " + client.getEstimatedTime());
         }
 
         return client;
