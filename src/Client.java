@@ -15,7 +15,7 @@ public class Client {
 		this.estimatedTime = estimatedTime;
 		this.arrivalTime = arrivalTime;
 		this.endTime = arrivalTime.plusHours(estimatedTime.getHour())
-                .plusMinutes(estimatedTime.getMinute());;
+                .plusMinutes(estimatedTime.getMinute());
 	}
 
 	public LocalTime getEndTime() {
@@ -60,8 +60,7 @@ public class Client {
 	@Override
 	public String toString() {
 		return "\nCode: " + this.getCode() + " CPF: " + this.getCpf() + " | " + this.getPriority() +
-				" | \nArrive: " + this.getArrivalTime() + "\tEstimated: " + this.getEstimatedTime() + 
-				"\tEnd at: " + this.getEndTime();
+				" | \nArrive: " + this.getArrivalTime() + "\tEstimated: " + this.getEstimatedTime();
 	}
 	
 	public String minimize() {

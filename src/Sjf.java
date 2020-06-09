@@ -1,7 +1,9 @@
+import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 public class Sjf implements Method{
@@ -9,8 +11,10 @@ public class Sjf implements Method{
 	private List<Integer> responseTimes;
     private List<Integer> returnTimes;
     private String name = "SJF";
-    
-    public Sjf() {
+	private static final int CLERKS = 2;
+	private static LocalTime actual;
+
+	public Sjf() {
     	responseTimes = new ArrayList<>();
         returnTimes = new ArrayList<>();
     }
@@ -19,9 +23,9 @@ public class Sjf implements Method{
 	public int start(List<Client> list, LocalTime dayStart, LocalTime dayEnd) {
 		int clientsFinalized = 0;
 		int initSize = list.size();
-        LocalTime actual = dayStart;
+        actual = dayStart;
         
-        ClientSorter.sortByArrive(list);
+       // ClientSorter.sortByArrive(list);
 
         //System.out.println(list + "\n\n\n");
         
@@ -68,7 +72,37 @@ public class Sjf implements Method{
 
         return clientsFinalized;
 	}
-	
+
+	@Override
+	public int startThread(File database, LocalTime dayStart, LocalTime dayEnd, int qntClients, int loop) {
+		actual = dayStart;
+		List<Client> list = new ArrayList<>(qntClients);
+		Semaphore listLock = new Semaphore(1);
+		Semaphore countItems = new Semaphore(0);
+		Producer producer = new Producer(database, list, listLock, countItems, qntClients);
+		ConsumerSjf clerk1 = new ConsumerSjf(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
+		ConsumerSjf clerk2 = new ConsumerSjf(actual, dayEnd, list, listLock, countItems,  qntClients/CLERKS, "Isabel");
+
+		try {
+			producer.start();
+			clerk1.start();
+			clerk2.start();
+			producer.join();
+			clerk1.join();
+			clerk2.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		this.responseTimes = clerk1.getResponseTimes();
+		this.responseTimes.addAll(clerk2.getResponseTimes());
+
+		this.returnTimes = clerk1.getReturnTimes();
+		this.returnTimes.addAll(clerk2.getReturnTimes());
+
+		return qntClients - list.size();
+	}
+
 	private Client getNextCLientOf(List<Client> list, LocalTime actual) {
 		Client returnClient = list.get(0);
 		final Client compareClient = returnClient;
@@ -86,7 +120,7 @@ public class Sjf implements Method{
 				returnClient = client;
 			}
 		}
-		
+
 		list.remove(returnClient);
 		return returnClient;
 	}
