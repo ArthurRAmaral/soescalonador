@@ -71,7 +71,7 @@ public class SimplePrioritySjf implements Method {
 		Semaphore countItems = new Semaphore(0);
 		Producer producer = new Producer(database, list, listLock, countItems, qntClients);
 		ConsumerPrioritySjf clerk1 = new ConsumerPrioritySjf(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Hellen");
-		ConsumerPrioritySjf clerk2 = new ConsumerPrioritySjf(actual, dayEnd, list, listLock, countItems, (qntClients+1)/CLERKS, "Isabel");
+		ConsumerPrioritySjf clerk2 = new ConsumerPrioritySjf(actual, dayEnd, list, listLock, countItems, (qntClients)/CLERKS, "Isabel");
 
 		try {
 			producer.start();
