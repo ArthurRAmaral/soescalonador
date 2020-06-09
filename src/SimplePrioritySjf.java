@@ -47,9 +47,9 @@ public class SimplePrioritySjf implements Method {
 					.plusMinutes(client.getEstimatedTime().getMinute());
 
 			if (finalizeAt.isBefore(dayEnd)) {
-//				System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime()
-//						+ "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt
-//						+ "\t|\tEstimate: " + client.getEstimatedTime());
+				System.out.println("Started at: " + startedAt + "\t|Should start at: " + client.getArrivalTime()
+						+ "\t\t|Prioridade: " + client.getPriority() + "\t|\tFinalized at: " + finalizeAt
+						+ "\t|\tEstimate: " + client.getEstimatedTime());
 				actual = finalizeAt;
 				clientsFinalized++;
 				// System.out.println("startedAt.getMinute() = " + ((startedAt.getMinute() -

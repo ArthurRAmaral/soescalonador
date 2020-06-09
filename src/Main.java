@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    private static final String DATABASE_FILE = "testNoRepeat.txt";
+    private static final String DATABASE_FILE = "test.txt";
     private static final LocalTime QUANTUM = LocalTime.of(0, 1);
     private static final LocalTime START = LocalTime.of(8, 0);
     private static final LocalTime END = LocalTime.of(17, 0);
