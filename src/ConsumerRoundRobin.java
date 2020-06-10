@@ -43,7 +43,12 @@ public class ConsumerRoundRobin extends Thread {
                 }
                 lock.release();
                 full.release();
-                sleep(this.quantum.getMinute() * 10);
+                if(next != null) {
+                    if(next.getPriority() == -1){
+                        i = numOp;
+                    }
+                    sleep(this.quantum.getMinute() * 10);
+                }
             } catch (InterruptedException ie2) {
                 ie2.printStackTrace();
             }
@@ -82,6 +87,10 @@ public class ConsumerRoundRobin extends Thread {
         actual = actual.plusHours(quantum.getHour()).plusMinutes(quantum.getMinute());
 
 //             System.out.println("Now: " + actual);
+
+        if(actual.isAfter(this.dayEnd)){
+            return (new Client("1", "12345678909", -1, end, end));
+        }
 
         if (client.getEstimatedTime().compareTo(end) > 0) {
             consumerList.add(consumerList.size(), client);

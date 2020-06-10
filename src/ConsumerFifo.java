@@ -38,8 +38,11 @@ public class ConsumerFifo extends Thread {
                 full.acquire();
                 lock.acquire();
                 Client next = getNextClient();
-                consumerList.remove(0);
+                if(next != null) {
+                    consumerList.remove(0);
+                }
                 lock.release();
+                if(next != null)
                 sleep(next.getEstimatedTime().getMinute() * 10);
             } catch (InterruptedException ie2) {
                 ie2.printStackTrace();
@@ -63,7 +66,7 @@ public class ConsumerFifo extends Thread {
         if (client.getArrivalTime().compareTo(actual) >= 0) {
             actual = client.getArrivalTime();
         } else {
-            wait = LocalTime.of((int) HOURS.between(client.getArrivalTime(), actual), (int) MINUTES.between(client.getArrivalTime(), actual));
+            wait = actual.minusHours(client.getArrivalTime().getHour()).minusMinutes(client.getArrivalTime().getMinute());
         }
 
         LocalTime startedAt = actual;
@@ -91,6 +94,8 @@ public class ConsumerFifo extends Thread {
                             ) * 60
                     )
             );
+        } else {
+            return null;
         }
 
         return client;
