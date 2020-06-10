@@ -36,9 +36,11 @@ public class ConsumerSjf extends Thread {
                 full.acquire();
                 lock.acquire();
                 Client next = getNextClient();
-                consumerList.remove(next);
+                if (next!=null)
+                    consumerList.remove(next);
                 lock.release();
-                sleep(next.getEstimatedTime().getMinute() * 10);
+                if (next!=null)
+                    sleep(next.getEstimatedTime().getMinute() * 10);
             } catch (InterruptedException ie2) {
                 ie2.printStackTrace();
             }
@@ -104,7 +106,7 @@ public class ConsumerSjf extends Thread {
                             ) * 60
                     )
             );
-        }
+        } else return null;
 
         return returnClient;
     }
