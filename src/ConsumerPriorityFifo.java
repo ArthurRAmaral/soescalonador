@@ -36,7 +36,7 @@ public class ConsumerPriorityFifo extends Thread {
                 Client next = getNextClient();
                 consumerList.remove(next);
                 lock.release();
-                sleep(next.getEstimatedTime().getMinute() * 30);
+                sleep(next.getEstimatedTime().getMinute() * 10);
             } catch (InterruptedException ie2) {
                 ie2.printStackTrace();
             }
